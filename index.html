@@ -82,14 +82,15 @@
       const reviewsContainer = document.getElementById('reviewsContainer');
 
       // Fetch and display latest movie reviews
-      fetch('/latestMovieReviews')
+  fetch('/latestMovieReviews', {
+    method: 'GET' // Use the correct HTTP method for fetching data
+  })
     .then((response) => response.text())
     .then((data) => {
-        reviewsContainer.innerHTML = data;
-        console.log(data);
+      reviewsContainer.innerHTML = data;
     })
     .catch((error) => {
-        console.error('Error fetching latest movie reviews:', error);
+      console.error('Error fetching latest movie reviews:', error);
       reviewsContainer.innerHTML = 'Error fetching latest movie reviews.';
     });
 
