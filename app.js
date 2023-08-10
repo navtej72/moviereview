@@ -13,14 +13,7 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-
 app.get("/latestMovieReviews", function (req, res) {
-
-  fetch('/latestMovieReviews', {
-  method: 'GET' // Explicitly specify the HTTP method
-})
-
-  
   const currentDate = new Date();
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(currentDate.getDate() - 30); // Fetch reviews from the last 7 days
@@ -31,51 +24,48 @@ app.get("/latestMovieReviews", function (req, res) {
     .then(([reviewsResponse]) => {
       const moviesReview = reviewsResponse.data;
 
-      if (moviesReview.num_results === 7) {
+      if (moviesReview.num_results === 0) {
         console.log("No results found for the latest reviews.");
         res.send("No results found for the latest reviews.");
       } else {
         const reviews = moviesReview.results;
-
         res.send(generateReviewHTML(reviews));
       }
     })
     .catch((error) => {
       console.error(error);
-      res.send("Error fetching movie reviews.");
+      res.status(500).send("Error fetching movie reviews.");
     });
 });
-
 
 app.post("/", function (req, res) {
   const query = req.body.moviename;
 
   const movieReviewsPromise = getMovieReviews(query);
- 
 
   Promise.all([movieReviewsPromise])
     .then(([reviewsResponse]) => {
       const moviesReview = reviewsResponse.data;
-      
+
       if (moviesReview.num_results === 0) {
         console.log("No results found for the given query.");
         res.send("No results found for the given query.");
       } else {
         const reviews = moviesReview.results;
-       
         res.send(generateReviewHTML(reviews));
       }
     })
     .catch(error => {
       console.error(error);
-      res.send("Error fetching movie reviews and articles.");
+      res.status(500).send("Error fetching movie reviews and articles.");
     });
 });
-
 
 app.listen(4000, function () {
   console.log("Server is running on port 4000");
 });
+
+// ... (generateReviewHTML and nytapi.js code)
 
 
 
