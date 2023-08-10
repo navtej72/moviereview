@@ -110,7 +110,7 @@
     const movieName = formData.get('moviename');
 
     // Make a fetch request to your server (assuming your server is running on localhost:4000)
-    fetch('/', {
+    fetch("/", {
       method: 'POST',
       body: new URLSearchParams(formData)
     })
