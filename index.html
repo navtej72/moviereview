@@ -82,14 +82,15 @@
 
     // Fetch and display latest movie reviews
     fetch('/latestMovieReviews')
-      .then((response) => response.text())
-      .then((data) => {
-        reviewsContainer.innerHTML = data;
-      })
-      .catch((error) => {
-        console.error('Error fetching latest movie reviews:', error);
-        reviewsContainer.innerHTML = 'Error fetching latest movie reviews.';
-      });
+        .then((response) => response.text())
+        .then((data) => {
+          reviewsContainer.innerHTML = data;
+        })
+        .catch((error) => {
+          console.error('Error fetching latest movie reviews:', error);
+          reviewsContainer.innerHTML = 'Error fetching latest movie reviews.';
+        });
+
 
     // Add event listener to open full article when image is clicked
     reviewsContainer.addEventListener('click', (event) => {
