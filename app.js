@@ -13,60 +13,65 @@ app.get("/", function (req, res) {
   res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/latestMovieReviews", function (req, res) {
-  const currentDate = new Date();
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(currentDate.getDate() - 30); // Fetch reviews from the last 7 days
-
-  const latestReviewsPromise = getLatestMovieReviews(sevenDaysAgo.toISOString());
-
-  Promise.all([latestReviewsPromise])
-    .then(([reviewsResponse]) => {
-      const moviesReview = reviewsResponse.data;
-
-      if (moviesReview.num_results === 0) {
-        console.log("No results found for the latest reviews.");
-        res.send("No results found for the latest reviews.");
-      } else {
-        const reviews = moviesReview.results;
-        res.send(generateReviewHTML(reviews));
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-      res.status(500).send("Error fetching movie reviews.");
-    });
-});
 
 app.post("/", function (req, res) {
   const query = req.body.moviename;
-
+  
   const movieReviewsPromise = getMovieReviews(query);
-
+  
   Promise.all([movieReviewsPromise])
-    .then(([reviewsResponse]) => {
-      const moviesReview = reviewsResponse.data;
+  .then(([reviewsResponse]) => {
+    const moviesReview = reviewsResponse.data;
 
       if (moviesReview.num_results === 0) {
         console.log("No results found for the given query.");
         res.send("No results found for the given query.");
       } else {
         const reviews = moviesReview.results;
+        
         res.send(generateReviewHTML(reviews));
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.error(error);
       res.status(500).send("Error fetching movie reviews and articles.");
     });
-});
+  });
 
-app.listen(4000, function () {
-  console.log("Server is running on port 4000");
-});
+  
 
-// ... (generateReviewHTML and nytapi.js code)
+  app.get("/latestMovieReviews", function (req, res) {
+    const currentDate = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(currentDate.getDate() - 30); // Fetch reviews from the last 7 days
+  
+    const latestReviewsPromise = getLatestMovieReviews(sevenDaysAgo.toISOString());
+  
+    Promise.all([latestReviewsPromise])
+      .then(([reviewsResponse]) => {
+        const moviesReview = reviewsResponse.data;
+  
+        if (moviesReview.num_results === 0) {
+          console.log("No results found for the latest reviews.");
+          res.send("No results found for the latest reviews.");
+        } else {
+          const reviews = moviesReview.results;
+          res.send(generateReviewHTML(reviews));
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        res.status(500).send("Error fetching movie reviews.");
+      });
+  });
 
+
+  app.listen(4000, function () {
+    console.log("Server is running on port 4000");
+  });
+  
+  // ... (generateReviewHTML and nytapi.js code)
+  
 
 
 function generateReviewHTML(reviews) {
