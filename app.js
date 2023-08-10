@@ -15,6 +15,12 @@ app.get("/", function (req, res) {
 
 
 app.get("/latestMovieReviews", function (req, res) {
+
+  fetch('/latestMovieReviews', {
+  method: 'GET' // Explicitly specify the HTTP method
+})
+
+  
   const currentDate = new Date();
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(currentDate.getDate() - 30); // Fetch reviews from the last 7 days

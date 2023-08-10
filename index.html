@@ -83,6 +83,7 @@
 
   // Fetch and display latest movie reviews
   fetch('/latestMovieReviews')
+
       .then((response) => response.text())
       .then((data) => {
         reviewsContainer.innerHTML = data;
