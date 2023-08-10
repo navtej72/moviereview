@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=, initial-scale=1.0">
+  <title>Movies Review App</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+        text-align: center  ;
+      }
+    
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+    
+      #searchForm {
+        display: flex;
+        justify-content: center;
+        margin: 20px;
+      }
+    
+      #movieNameInput {
+        padding: 5px 10px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+      }
+    
+      #reviewsContainer {
+        margin: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+      }
+    
+      /* Additional styles for the movie reviews */
+      .movie-review {
+        margin: 10px 0;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+      }
+    
+      .movie-review p {
+        margin: 5px 0;
+      }
+    
+      .movie-review img {
+        width: 40%;
+        height: 50%;
+        max-height: 200px;
+        display: block;
+        margin: 10px auto;
+   
+      }
+      .movie-review img:hover {
+       scale: 1.01;
+      }
+    </style>
+</head>
+
+<body>
+  <h1>Movie Reviews App</h1>
+  <form id="searchForm">
+    <label for="movieNameInput">Movie Name: </label>
+    <input id="movieNameInput" type="text" name="moviename">
+    <button type="submit">Search</button>
+  </form>
+  <div id="reviewsContainer">
+    
+  </div>
+  
+
+
+<script>
+  const reviewsContainer = document.getElementById('reviewsContainer');
+
+  // Fetch and display latest movie reviews
+  fetch('/latestMovieReviews')
+    .then((response) => response.text())
+    .then((data) => {
+      reviewsContainer.innerHTML = data;
+    })
+    .catch((error) => {
+      console.error('Error fetching latest movie reviews:', error);
+      reviewsContainer.innerHTML = 'Error fetching latest movie reviews.';
+    });
+
+  // Add event listener to open full article when image is clicked
+  reviewsContainer.addEventListener('click', (event) => {
+    const image = event.target;
+    if (image.tagName === 'IMG' && image.dataset.articleUrl) {
+      window.open(image.dataset.articleUrl, '_blank');
+    }
+  });
+
+  // searching
+  const searchForm = document.getElementById('searchForm');
+
+  searchForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(searchForm);
+    const movieName = formData.get('moviename');
+
+    // Make a fetch request to your server (assuming your server is running on localhost:4000)
+    fetch('/', {
+      method: 'POST',
+      body: new URLSearchParams(formData)
+    })
+      .then(response => response.text())
+      .then(data => {
+        reviewsContainer.innerHTML = data;
+      })
+      .catch(error => {
+        console.error('Error fetching movie reviews and articles:', error);
+        reviewsContainer.innerHTML = 'Error fetching movie reviews and articles.';
+      });
+  });
+</script>
+
+</body>
+
+</html>
